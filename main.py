@@ -54,7 +54,7 @@ indications = list(set(item["Indication"] for item in sheet_data))
 logo = Image.open("logo.png")  # Replace "logo.png" with the path to your logo file
 
 # Streamlit UI
-st.image(logo, use_column_width=True)
+st.image(logo, width=300)
 st.title("PRESTAPERF Calculator")
 st.markdown(
     """
