@@ -82,6 +82,14 @@ def generate_pdf(details, total, client_sap):
     pdf_buffer.seek(0)
     return pdf_buffer
 
+# Session state to persist data
+if "details" not in st.session_state:
+    st.session_state.details = []
+if "total" not in st.session_state:
+    st.session_state.total = 0
+if "client_sap" not in st.session_state:
+    st.session_state.client_sap = ""
+
 # Indications Selection
 selected_indications = st.sidebar.multiselect("Choisissez les indications", options=indications)
 
@@ -93,32 +101,36 @@ if selected_indications:
     st.subheader("Désignations")
     for item in designations:
         designation = item["Designation"]
-        quantity = st.number_input(f"Quantité pour {designation}", min_value=0, step=1)
+        quantity = st.number_input(f"Quantité pour {designation}", min_value=0, step=1, key=designation)
         designation_quantities[designation] = (quantity, item["Tarif_HT"])
 
-# Calculation Button
 if st.button("Calculer"):
-    total = 0
-    details = []
+    st.session_state.details = []
+    st.session_state.total = 0
+
     for designation, (quantity, tarif_ht) in designation_quantities.items():
         if quantity > 0:
             cost = tarif_ht * quantity
-            total += cost
-            details.append(f"{designation}: {quantity} x {tarif_ht}€ HT = {cost:.2f}€ HT")
+            st.session_state.total += cost
+            st.session_state.details.append(f"{designation}: {quantity} x {tarif_ht}€ HT = {cost:.2f}€ HT")
 
+    st.success("Calcul terminé !")
+
+# Display calculation details
+if st.session_state.details:
     st.subheader("Détail des désignations")
-    for detail in details:
+    for detail in st.session_state.details:
         st.write(detail)
 
     st.subheader("Total")
-    st.write(f"Total HT: {total:.2f}€")
+    st.write(f"Total HT: {st.session_state.total:.2f}€")
 
-    # PDF Generation
-    client_sap = st.text_input("Numéro Client SAP")
-    if st.button("Générer PDF"):
-        if client_sap:
-            pdf_buffer = generate_pdf(details, total, client_sap)
-            st.success("PDF généré avec succès !")
-            st.download_button("Télécharger le PDF", data=pdf_buffer, file_name="PRESTAPERF_Resume.pdf", mime="application/pdf")
-        else:
-            st.error("Veuillez renseigner le numéro client SAP.")
+# PDF Generation
+st.session_state.client_sap = st.text_input("Numéro Client SAP", st.session_state.client_sap)
+if st.button("Générer PDF"):
+    if st.session_state.client_sap:
+        pdf_buffer = generate_pdf(st.session_state.details, st.session_state.total, st.session_state.client_sap)
+        st.success("PDF généré avec succès !")
+        st.download_button("Télécharger le PDF", data=pdf_buffer, file_name="PRESTAPERF_Resume.pdf", mime="application/pdf")
+    else:
+        st.error("Veuillez renseigner le numéro client SAP.")
