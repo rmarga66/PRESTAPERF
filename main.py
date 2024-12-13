@@ -1,4 +1,5 @@
 import streamlit as st
+from PIL import Image
 
 # Hardcoded data from the simplified Excel file
 sheet_data = [
@@ -49,8 +50,36 @@ sheet_data = [
 
 indications = list(set(item["Indication"] for item in sheet_data))
 
+# Load logo
+logo = Image.open("logo.png")  # Replace "logo.png" with the path to your logo file
+
 # Streamlit UI
+st.image(logo, use_column_width=True)
 st.title("PRESTAPERF Calculator")
+st.markdown(
+    """
+    <style>
+        body {
+            background-color: #E8F6F3;
+        }
+        .stApp {
+            color: #034694;
+        }
+        .stButton > button {
+            background-color: #034694;
+            color: white;
+            border-radius: 5px;
+            border: none;
+        }
+        .stButton > button:hover {
+            background-color: #FF4136;
+            color: white;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.sidebar.header("Configuration")
 
 # Session state to persist data
@@ -95,9 +124,3 @@ if st.session_state.details:
 
     st.subheader("Total")
     st.write(f"Total HT: {st.session_state.total:.2f}€")
-
-# Print functionality
-st.session_state.client_sap = st.text_input("Numéro Client SAP", st.session_state.client_sap)
-if st.button("Imprimer"):
-    st.success("Utilisez la fonctionnalité d'impression de votre navigateur pour imprimer cette page.")
-    st.write("Vous pouvez imprimer cette page en utilisant le raccourci clavier : **Ctrl+P** (Windows) ou **Cmd+P** (Mac).")
