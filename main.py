@@ -59,14 +59,14 @@ def generate_pdf(details, total, client_sap):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
-    pdf.add_font('ArialUnicode', '', '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', uni=True)
+    pdf.add_font('ArialUnicode', '', '/usr/share/fonts/truetype/arial/Arial.ttf', uni=True)
     pdf.set_font('ArialUnicode', size=12)
 
-    pdf.set_fill_color(224, 255, 255)  # Turquoise
-    pdf.set_text_color(255, 69, 0)  # Rouge
+    pdf.set_fill_color(224, 255, 255)  # Bleu
+    pdf.set_text_color(255, 69, 0)  # Blanc
     pdf.cell(200, 10, txt="PRESTAPERF - Résumé", ln=True, align="C", fill=True)
 
-    pdf.set_text_color(0, 0, 0)  # Noir
+    pdf.set_text_color(0, 0, 0)  # Bleu
     pdf.cell(200, 10, txt=f"Numéro Client SAP: {client_sap}", ln=True, align="L")
 
     pdf.ln(10)
