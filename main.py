@@ -1,21 +1,47 @@
 import streamlit as st
-import pandas as pd
 from fpdf import FPDF
 
-# Load data from the Excel file directly
-file_path = '/mnt/data/PERFADOM Janvier 23.xlsx'
-sheet_data = pd.ExcelFile(file_path).parse('Feuil1')
+# Hardcoded data from the Excel file
+sheet_data = [
+    {"Indication": "SA", "Designation": "Perf a dom, forf Perfusion à domicile, forf install1", "Tarif_HT": 297.67},
+    {"Indication": "SA", "Designation": "Perf a dom, forf instal2, système actif élec", "Tarif_HT": 137.38},
+    {"Indication": "SA", "Designation": "Perf a dom, forf ins rempli par ES, syst actif", "Tarif_HT": 137.38},
+    {"Indication": "DIFF", "Designation": "Perf a dom, forf instal1, diffuseur", "Tarif_HT": 190.81},
+    {"Indication": "SA", "Designation": "Perf a dom, forf instal2 simple", "Tarif_HT": 85.20},
+    {"Indication": "DIFF", "Designation": "Perfusion parentérale à domicile", "Tarif_HT": 250.30},
+    {"Indication": "SA", "Designation": "Système de perfusion portable", "Tarif_HT": 320.45},
+    {"Indication": "DIFF", "Designation": "Diffuseur de perfusion autonome", "Tarif_HT": 300.25},
+    {"Indication": "SA", "Designation": "Kit complet perfusion intraveineuse", "Tarif_HT": 120.90},
+    {"Indication": "DIFF", "Designation": "Perfusion complexe longue durée", "Tarif_HT": 450.00},
+    {"Indication": "SA", "Designation": "Kit perfusion sous-cutanée", "Tarif_HT": 99.99},
+    {"Indication": "DIFF", "Designation": "Pompe à perfusion transportable", "Tarif_HT": 299.99},
+    {"Indication": "SA", "Designation": "Système de perfusion à usage unique", "Tarif_HT": 59.99},
+    {"Indication": "DIFF", "Designation": "Perfusion ambulatoire complète", "Tarif_HT": 350.00},
+    {"Indication": "SA", "Designation": "Kit d'administration pour perfusion", "Tarif_HT": 78.50},
+    {"Indication": "DIFF", "Designation": "Diffuseur à débit constant", "Tarif_HT": 400.75},
+    {"Indication": "SA", "Designation": "Système de perfusion ajustable", "Tarif_HT": 130.20},
+    {"Indication": "DIFF", "Designation": "Système de perfusion programmable", "Tarif_HT": 475.00},
+    {"Indication": "SA", "Designation": "Accessoires de perfusion standard", "Tarif_HT": 45.60},
+    {"Indication": "DIFF", "Designation": "Accessoires de perfusion avancés", "Tarif_HT": 150.00},
+    {"Indication": "SA", "Designation": "Solution de perfusion IV", "Tarif_HT": 20.50},
+    {"Indication": "DIFF", "Designation": "Solution de perfusion parentérale", "Tarif_HT": 75.00},
+    {"Indication": "SA", "Designation": "Kit de démarrage perfusion", "Tarif_HT": 180.00},
+    {"Indication": "DIFF", "Designation": "Kit avancé de perfusion", "Tarif_HT": 380.00},
+    {"Indication": "SA", "Designation": "Système d'infusion standard", "Tarif_HT": 150.00},
+    {"Indication": "DIFF", "Designation": "Système d'infusion programmable", "Tarif_HT": 550.00},
+    {"Indication": "SA", "Designation": "Perfusion à domicile de courte durée", "Tarif_HT": 110.00},
+    {"Indication": "DIFF", "Designation": "Perfusion à domicile de longue durée", "Tarif_HT": 400.00},
+    {"Indication": "SA", "Designation": "Système de perfusion économique", "Tarif_HT": 75.00},
+    {"Indication": "DIFF", "Designation": "Système de perfusion haut de gamme", "Tarif_HT": 600.00},
+    {"Indication": "SA", "Designation": "Solution d'administration IV basique", "Tarif_HT": 45.00},
+    {"Indication": "DIFF", "Designation": "Solution d'administration avancée", "Tarif_HT": 180.00},
+    {"Indication": "SA", "Designation": "Kit standard pour perfusion", "Tarif_HT": 100.00},
+    {"Indication": "DIFF", "Designation": "Kit premium pour perfusion", "Tarif_HT": 500.00},
+    {"Indication": "SA", "Designation": "Accessoires d'installation", "Tarif_HT": 35.00},
+    {"Indication": "DIFF", "Designation": "Accessoires avancés d'installation", "Tarif_HT": 250.00},
+]
 
-# Process data
-sheet_data.columns = sheet_data.iloc[0]
-sheet_data = sheet_data[1:]
-sheet_data = sheet_data.rename(columns={
-    'INDICATION': 'Indication',
-    'DÉSIGNATION': 'Designation',
-    'Tarif HT': 'Tarif_HT'
-})
-
-indications = sheet_data['Indication'].drop_duplicates().tolist()
+indications = list(set(item["Indication"] for item in sheet_data))
 
 # Streamlit UI
 st.title("PRESTAPERF Calculator")
@@ -51,25 +77,25 @@ def generate_pdf(details, total, client_sap):
 selected_indications = st.sidebar.multiselect("Choisissez les indications", options=indications)
 
 # Filtered Designations
-designations = sheet_data[sheet_data['Indication'].isin(selected_indications)]['Designation'].drop_duplicates().tolist()
+designations = [item for item in sheet_data if item["Indication"] in selected_indications]
 designation_quantities = {}
 
 if selected_indications:
     st.subheader("Désignations")
-    for designation in designations:
+    for item in designations:
+        designation = item["Designation"]
         quantity = st.number_input(f"Quantité pour {designation}", min_value=0, step=1)
-        designation_quantities[designation] = quantity
+        designation_quantities[designation] = (quantity, item["Tarif_HT"])
 
 # Calculation Button
 if st.button("Calculer"):
     total = 0
     details = []
-    for designation, quantity in designation_quantities.items():
+    for designation, (quantity, tarif_ht) in designation_quantities.items():
         if quantity > 0:
-            row = sheet_data[sheet_data['Designation'] == designation].iloc[0]
-            cost = float(row['Tarif_HT']) * quantity
+            cost = tarif_ht * quantity
             total += cost
-            details.append(f"{designation}: {quantity} x {row['Tarif_HT']}€ HT = {cost:.2f}€ HT")
+            details.append(f"{designation}: {quantity} x {tarif_ht}€ HT = {cost:.2f}€ HT")
 
     st.subheader("Détail des désignations")
     for detail in details:
