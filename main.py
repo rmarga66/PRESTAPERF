@@ -1,6 +1,4 @@
 import streamlit as st
-from fpdf import FPDF
-from io import BytesIO
 
 # Hardcoded data from the simplified Excel file
 sheet_data = [
@@ -55,37 +53,6 @@ indications = list(set(item["Indication"] for item in sheet_data))
 st.title("PRESTAPERF Calculator")
 st.sidebar.header("Configuration")
 
-def generate_pdf(details, total, client_sap):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_auto_page_break(auto=True, margin=15)
-
-    # Adding a Unicode-compatible font
-    pdf.add_font('DejaVu', '', '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', uni=True)
-    pdf.set_font('DejaVu', '', 12)
-
-    pdf.set_fill_color(224, 255, 255)  # Turquoise
-    pdf.set_text_color(255, 69, 0)  # Rouge
-    pdf.cell(200, 10, txt="PRESTAPERF - Résumé", ln=True, align="C", fill=True)
-
-    pdf.set_text_color(0, 0, 0)  # Noir
-    pdf.cell(200, 10, txt=f"Numéro Client SAP: {client_sap}", ln=True, align="L")
-
-    pdf.ln(10)
-    pdf.set_font('DejaVu', '', 10)
-    pdf.cell(200, 10, txt="Détail des désignations:", ln=True, align="L")
-
-    for line in details:
-        pdf.multi_cell(0, 10, txt=line)
-
-    pdf.ln(10)
-    pdf.cell(200, 10, txt=f"Total HT: {total:.2f}€", ln=True, align="L")
-
-    pdf_buffer = BytesIO()
-    pdf.output(pdf_buffer)
-    pdf_buffer.seek(0)
-    return pdf_buffer
-
 # Session state to persist data
 if "details" not in st.session_state:
     st.session_state.details = []
@@ -129,12 +96,8 @@ if st.session_state.details:
     st.subheader("Total")
     st.write(f"Total HT: {st.session_state.total:.2f}€")
 
-# PDF Generation
+# Print functionality
 st.session_state.client_sap = st.text_input("Numéro Client SAP", st.session_state.client_sap)
-if st.button("Générer PDF"):
-    if st.session_state.client_sap:
-        pdf_buffer = generate_pdf(st.session_state.details, st.session_state.total, st.session_state.client_sap)
-        st.success("PDF généré avec succès !")
-        st.download_button("Télécharger le PDF", data=pdf_buffer, file_name="PRESTAPERF_Resume.pdf", mime="application/pdf")
-    else:
-        st.error("Veuillez renseigner le numéro client SAP.")
+if st.button("Imprimer"):
+    st.success("Utilisez la fonctionnalité d'impression de votre navigateur pour imprimer cette page.")
+    st.write("Vous pouvez imprimer cette page en utilisant le raccourci clavier : **Ctrl+P** (Windows) ou **Cmd+P** (Mac).")
