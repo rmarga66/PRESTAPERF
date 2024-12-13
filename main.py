@@ -1,5 +1,6 @@
 import streamlit as st
 from fpdf import FPDF
+from io import BytesIO
 
 # Hardcoded data from the simplified Excel file
 sheet_data = [
@@ -76,9 +77,10 @@ def generate_pdf(details, total, client_sap):
     pdf.ln(10)
     pdf.cell(200, 10, txt=f"Total HT: {total:.2f}€", ln=True, align="L")
 
-    pdf_file_path = "PRESTAPERF_Resume.pdf"
-    pdf.output(pdf_file_path)
-    return pdf_file_path
+    pdf_buffer = BytesIO()
+    pdf.output(pdf_buffer)
+    pdf_buffer.seek(0)
+    return pdf_buffer
 
 # Indications Selection
 selected_indications = st.sidebar.multiselect("Choisissez les indications", options=indications)
@@ -115,9 +117,8 @@ if st.button("Calculer"):
     client_sap = st.text_input("Numéro Client SAP")
     if st.button("Générer PDF"):
         if client_sap:
-            pdf_path = generate_pdf(details, total, client_sap)
-            st.success(f"PDF généré avec succès: {pdf_path}")
-            with open(pdf_path, "rb") as pdf_file:
-                st.download_button("Télécharger le PDF", data=pdf_file, file_name="PRESTAPERF_Resume.pdf")
+            pdf_buffer = generate_pdf(details, total, client_sap)
+            st.success("PDF généré avec succès !")
+            st.download_button("Télécharger le PDF", data=pdf_buffer, file_name="PRESTAPERF_Resume.pdf", mime="application/pdf")
         else:
             st.error("Veuillez renseigner le numéro client SAP.")
