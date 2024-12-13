@@ -73,7 +73,7 @@ def generate_pdf(details, total, client_sap):
     pdf.cell(200, 10, txt="Détail des désignations:", ln=True, align="L")
 
     for line in details:
-        pdf.multi_cell(0, 10, txt=line)
+        pdf.multi_cell(0, 10, txt=line.encode('latin-1', 'replace').decode('latin-1'))
 
     pdf.ln(10)
     pdf.cell(200, 10, txt=f"Total HT: {total:.2f}€", ln=True, align="L")
