@@ -1,2 +1,41 @@
 pdf.add_font('DejaVu', '', 'DejaVuSans.ttf', uni=True)
 pdf.set_font('DejaVu', '', 12)
+def generate_invoice(details, total, client_sap):
+    pdf = FPDF()
+    pdf.add_page()
+
+    # Ajouter une police Unicode
+    pdf.add_font('DejaVu', '', 'DejaVuSans.ttf', uni=True)
+    pdf.set_font('DejaVu', '', 12)
+
+    # Header
+    pdf.set_fill_color(224, 224, 224)  # Light gray
+    pdf.cell(200, 10, "FACTURE", ln=True, align="C", fill=True)
+    pdf.ln(10)
+
+    # Client Information
+    pdf.set_font("DejaVu", size=10)
+    pdf.cell(200, 10, f"Client SAP: {client_sap}", ln=True, align="L")
+    pdf.ln(10)
+
+    # Details
+    pdf.cell(200, 10, "Détails des désignations:", ln=True, align="L")
+    pdf.set_font("DejaVu", size=9)
+    for line in details:
+        pdf.multi_cell(0, 10, txt=line)
+
+    pdf.ln(10)
+
+    # Total
+    pdf.set_font("DejaVu", size=12)
+    pdf.cell(200, 10, f"Total HT: {total:.2f}€", ln=True, align="L")
+
+    # Footer
+    pdf.ln(10)
+    pdf.set_font("DejaVu", size=8)
+    pdf.cell(200, 10, "Merci pour votre confiance.", ln=True, align="C")
+
+    pdf_buffer = BytesIO()
+    pdf.output(pdf_buffer)
+    pdf_buffer.seek(0)
+    return pdf_buffer
