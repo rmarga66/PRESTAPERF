@@ -3,10 +3,10 @@ from PIL import Image
 
 # Hardcoded data from the simplified Excel file
 sheet_data = [
-    {"Indication": "SA", "Designation": "Perf a dom, forf Perfusion à domicile, forf instal1, syst actif électrique, PERFADOM1-I1-SA-ELEC", "Tarif_HT": 297.67},
-    {"Indication": "SA", "Designation": "Perf a dom, forf instal2, système actif élec, PERFADOM2-I2-SA-ELEC", "Tarif_HT": 137.38},
-    {"Indication": "SA", "Designation": "Perf a dom, forf ins rempli par ES, syst actif élec, PERFADOM3-I-REMPLI-ES-SA-ELEC", "Tarif_HT": 137.38},
-    {"Indication": "DIFF", "Designation": "Perf a dom, forf instal1, diffuseur, PERFADOM4-I1-DIFF", "Tarif_HT": 190.81},
+    {"Indication": "SA", "Designation": "forf Perfusion à domicile, forf instal1, syst actif électrique, PERFADOM1-I1-SA-ELEC", "Tarif_HT": 297.67},
+    {"Indication": "SA", "Designation": "forf instal2, système actif élec, PERFADOM2-I2-SA-ELEC", "Tarif_HT": 137.38},
+    {"Indication": "SA", "Designation": "forf ins rempli par ES, syst actif élec, PERFADOM3-I-REMPLI-ES-SA-ELEC", "Tarif_HT": 137.38},
+    {"Indication": "DIFF", "Designation": "forf instal1, diffuseur, PERFADOM4-I1-DIFF", "Tarif_HT": 190.81},
     {"Indication": "DIFF", "Designation": "Perf a dom, forf instal2, diffuseur, PERFADOM5-I2-DIFF", "Tarif_HT": 87.77},
     {"Indication": "GRAV", "Designation": "Perf a dom, forfait instal et suivi, gravité, PERFADOM6-IS-GRAV", "Tarif_HT": 38.16},
     {"Indication": "SA", "Designation": "Perf a dom, forfait hebdo suivi, système actif, PERFADOM7E-S-SA-ELEC", "Tarif_HT": 83.95},
