@@ -1,7 +1,5 @@
 import streamlit as st
 from PIL import Image
-from fpdf import FPDF
-from io import BytesIO
 
 # Hardcoded data from the simplified Excel file
 sheet_data = [
@@ -57,7 +55,7 @@ logo = Image.open("logo.png")  # Replace "logo.png" with the path to your logo f
 
 # Streamlit UI
 st.image(logo, width=150)
-st.title("PRESTAPERF Calculator")
+st.title("PRESTAPERF by RM")
 st.sidebar.header("Configuration")
 
 # Session state initialization
@@ -104,55 +102,3 @@ if st.session_state.details:
     st.write(f"Total HT: {st.session_state.total:.2f}€")
 
 st.session_state.client_sap = st.text_input("Numéro Client SAP", st.session_state.client_sap)
-
-# Generate Invoice
-
-def generate_invoice(details, total, client_sap):
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-
-    # Header
-    pdf.set_fill_color(224, 224, 224)  # Light gray
-    pdf.cell(200, 10, "FACTURE", ln=True, align="C", fill=True)
-    pdf.ln(10)
-
-    # Client Information
-    pdf.set_font("Arial", size=10)
-    pdf.cell(200, 10, f"Client SAP: {client_sap}", ln=True, align="L")
-    pdf.ln(10)
-
-    # Details
-    pdf.cell(200, 10, "Détails des désignations:", ln=True, align="L")
-    pdf.set_font("Arial", size=9)
-    for line in details:
-        pdf.multi_cell(0, 10, txt=line)
-
-
-    pdf.ln(10)
-
-    # Total
-    pdf.set_font("Arial", size=12)
-    pdf.cell(200, 10, f"Total HT: {total:.2f}€", ln=True, align="L")
-
-    # Footer
-    pdf.ln(10)
-    pdf.set_font("Arial", size=8)
-    pdf.cell(200, 10, "Merci pour votre confiance.", ln=True, align="C")
-
-    pdf_buffer = BytesIO()
-    pdf.output(pdf_buffer)
-    pdf_buffer.seek(0)
-    return pdf_buffer
-
-if st.session_state.details and st.session_state.client_sap:
-    if st.button("Générer Facture"):
-        pdf_buffer = generate_invoice(st.session_state.details, st.session_state.total, st.session_state.client_sap)
-        st.download_button(
-            "Télécharger la Facture",
-            data=pdf_buffer,
-            file_name="facture.pdf",
-            mime="application/pdf"
-        )
-else:
-    st.warning("Veuillez remplir les informations nécessaires pour générer une facture.")
