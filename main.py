@@ -90,7 +90,7 @@ if st.button("Calculer"):
             st.session_state.total += cost
             st.session_state.details.append(f"{designation}: {quantity} x {tarif_ht}€ HT = {cost:.2f}€ HT")
 
-    st.success("Calcul terminé, merci Romain MARGALET !")
+    st.success("Calcul terminé, c'est de la bombe bébé !")
 
 # Display calculation details
 if st.session_state.details:
@@ -101,7 +101,7 @@ if st.session_state.details:
     st.subheader("Total")
     st.write(f"Total HT: {st.session_state.total:.2f}€")
     st.write("Fait par Romain Margalet avec ❤️")
-    st.write("ALLEZ L'OM")
+    st.write("Visca Catalunya !")
 
 
 
