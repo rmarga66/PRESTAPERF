@@ -56,7 +56,7 @@ logo = Image.open("logo.png")  # Replace "logo.png" with the path to your logo f
 # Streamlit UI
 st.image(logo, width=150)
 st.title("Calculette PRESTAPERF by RM")
-st.sidebar.header("Bonjour")
+st.sidebar.header("Bonjour,")
 
 # Session state initialization
 if "details" not in st.session_state:
