@@ -57,7 +57,7 @@ logo = Image.open("logo.png")  # Replace "logo.png" with the path to your logo f
 
 # Streamlit UI
 st.image(logo, width=150)
-# Streamlit Sidebar
+st.title("PRESTAPERF Calculator")
 st.sidebar.header("Configuration")
 
 # Session state initialization
@@ -82,7 +82,6 @@ if selected_indications:
         quantity = st.number_input(f"Quantité pour {designation}", min_value=0, step=1, key=designation)
         designation_quantities[designation] = (quantity, item["Tarif_HT"])
 
-# Calculation Button
 if st.button("Calculer"):
     st.session_state.details = []
     st.session_state.total = 0
@@ -104,16 +103,17 @@ if st.session_state.details:
     st.subheader("Total")
     st.write(f"Total HT: {st.session_state.total:.2f}€")
 
-# SAP Client Number Input
 st.session_state.client_sap = st.text_input("Numéro Client SAP", st.session_state.client_sap)
 
-# Invoice Generation
+# Generate Invoice
+
 def generate_invoice(details, total, client_sap):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=12)
 
     # Header
+    pdf.set_fill_color(224, 224, 224)  # Light gray
     pdf.cell(200, 10, "FACTURE", ln=True, align="C", fill=True)
     pdf.ln(10)
 
@@ -126,7 +126,7 @@ def generate_invoice(details, total, client_sap):
     pdf.cell(200, 10, "Détails des désignations:", ln=True, align="L")
     pdf.set_font("Arial", size=9)
     for line in details:
-        pdf.multi_cell(0, 10, line)
+        pdf.multi_cell(0, 10, txt=line.encode('latin-1', 'replace').decode('latin-1'))
 
     pdf.ln(10)
 
