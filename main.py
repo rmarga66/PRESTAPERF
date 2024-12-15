@@ -56,7 +56,7 @@ logo = Image.open("logo.png")  # Replace "logo.png" with the path to your logo f
 # Streamlit UI
 st.image(logo, width=150)
 st.title("Calculette PRESTAPERF by RM")
-st.sidebar.header("START")
+st.sidebar.header("Bonjour")
 
 # Session state initialization
 if "details" not in st.session_state:
@@ -90,11 +90,11 @@ if st.button("Calculer"):
             st.session_state.total += cost
             st.session_state.details.append(f"{designation}: {quantity} x {tarif_ht}€ HT = {cost:.2f}€ HT")
 
-    st.success("Calcul terminé !")
+    st.success("Calcul terminé, merci Romain MARGALET !")
 
 # Display calculation details
 if st.session_state.details:
-    st.subheader("Détail des désignations")
+    st.subheader("Détail de ta facture")
     for detail in st.session_state.details:
         st.write(detail)
 
