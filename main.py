@@ -55,7 +55,7 @@ logo = Image.open("logo.png")  # Replace "logo.png" with the path to your logo f
 
 # Streamlit UI
 st.image(logo, width=150)
-st.title("PRESTAPERF by RM")
+st.title("Calculette PRESTAPERF by RM")
 st.sidebar.header("Configuration")
 
 # Session state initialization
@@ -63,8 +63,7 @@ if "details" not in st.session_state:
     st.session_state.details = []
 if "total" not in st.session_state:
     st.session_state.total = 0
-if "client_sap" not in st.session_state:
-    st.session_state.client_sap = ""
+
 
 # Indications Selection
 selected_indications = st.sidebar.multiselect("Choisissez les indications", options=indications)
