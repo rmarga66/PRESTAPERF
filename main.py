@@ -126,7 +126,8 @@ def generate_invoice(details, total, client_sap):
     pdf.cell(200, 10, "Détails des désignations:", ln=True, align="L")
     pdf.set_font("Arial", size=9)
     for line in details:
-        pdf.multi_cell(0, 10, txt=line.encode('latin-1', 'replace').decode('latin-1'))
+        pdf.multi_cell(0, 10, txt=line)
+
 
     pdf.ln(10)
 
