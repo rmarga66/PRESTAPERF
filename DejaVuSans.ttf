@@ -1,0 +1,2 @@
+pdf.add_font('DejaVu', '', 'DejaVuSans.ttf', uni=True)
+pdf.set_font('DejaVu', '', 12)
