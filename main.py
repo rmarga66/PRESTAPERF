@@ -1,7 +1,69 @@
+import streamlit as st
+from PIL import Image
 from fpdf import FPDF
 from io import BytesIO
-import streamlit as st
 
+# Hardcoded data from the simplified Excel file
+sheet_data = [
+    {"Indication": "SA", "Designation": "Perf a dom, forf Perfusion à domicile, forf instal1, syst actif électrique, PERFADOM1-I1-SA-ELEC", "Tarif_HT": 297.67},
+    {"Indication": "SA", "Designation": "Perf a dom, forf instal2, système actif élec, PERFADOM2-I2-SA-ELEC", "Tarif_HT": 137.38},
+    # (Add remaining rows here...)
+]
+
+indications = list(set(item["Indication"] for item in sheet_data))
+
+# Load logo
+logo = Image.open("logo.png")  # Ensure logo.png is in the same folder as this script
+
+# Streamlit UI
+st.image(logo, width=150)
+st.title("PRESTAPERF Calculator")
+st.sidebar.header("Configuration")
+
+# Session state initialization
+if "details" not in st.session_state:
+    st.session_state.details = []
+if "total" not in st.session_state:
+    st.session_state.total = 0
+if "client_sap" not in st.session_state:
+    st.session_state.client_sap = ""
+
+# Indications Selection
+selected_indications = st.sidebar.multiselect("Choisissez les indications", options=indications)
+
+# Filtered Designations
+designations = [item for item in sheet_data if item["Indication"] in selected_indications]
+designation_quantities = {}
+
+if selected_indications:
+    st.subheader("Désignations")
+    for item in designations:
+        designation = item["Designation"]
+        quantity = st.number_input(f"Quantité pour {designation}", min_value=0, step=1, key=designation)
+        designation_quantities[designation] = (quantity, item["Tarif_HT"])
+
+if st.button("Calculer"):
+    st.session_state.details = []
+    st.session_state.total = 0
+
+    for designation, (quantity, tarif_ht) in designation_quantities.items():
+        if quantity > 0:
+            cost = tarif_ht * quantity
+            st.session_state.total += cost
+            st.session_state.details.append(f"{designation}: {quantity} x {tarif_ht}€ HT = {cost:.2f}€ HT")
+
+    st.success("Calcul terminé !")
+
+# Display calculation details
+if st.session_state.details:
+    st.subheader("Détail des désignations")
+    for detail in st.session_state.details:
+        st.write(detail)
+
+    st.subheader("Total")
+    st.write(f"Total HT: {st.session_state.total:.2f}€")
+
+# Generate Invoice
 def generate_invoice(details, total, client_sap):
     pdf = FPDF()
     pdf.add_page()
@@ -41,15 +103,7 @@ def generate_invoice(details, total, client_sap):
     pdf_buffer.seek(0)
     return pdf_buffer
 
-# Generate PDF button
+# Invoice generation button
+st.session_state.client_sap = st.text_input("Numéro Client SAP", st.session_state.client_sap)
 if st.session_state.details and st.session_state.client_sap:
-    if st.button("Générer Facture"):
-        pdf_buffer = generate_invoice(st.session_state.details, st.session_state.total, st.session_state.client_sap)
-        st.download_button(
-            "Télécharger la Facture",
-            data=pdf_buffer,
-            file_name="facture.pdf",
-            mime="application/pdf"
-        )
-else:
-    st.write("Veuillez remplir les informations nécessaires pour générer une facture.")
+    if st.button("Générer Fact
