@@ -101,7 +101,7 @@ if st.session_state.details:
     st.subheader("Total")
     st.write(f"Total HT: {st.session_state.total:.2f}€")
     st.write("Fait par Romain Margalet avec ❤️")
-    st.write("Tu n'es pas sûr de ton calcul, je t'aide : romain.margalet@bastide-medical.fr")
+    st.write("Tu n'es pas sûr de ton calcul, je peux t'aider : romain.margalet@bastide-medical.fr")
 
 
 
