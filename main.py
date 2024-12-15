@@ -100,5 +100,7 @@ if st.session_state.details:
 
     st.subheader("Total")
     st.write(f"Total HT: {st.session_state.total:.2f}€")
+    st.write("Fait par Romain Margalet avec ❤️")
+
 
 
