@@ -69,13 +69,24 @@ st.image(logo, width=150)
 st.title("Calculette PRESTAPERF by RM")
 st.sidebar.header("Bonjour,")
 
+# Sidebar instructions
+st.sidebar.markdown(
+    "<p style='color:red; font-style:italic;'>"
+    "AIDE MEMOIRE :<br>"
+    "- Un seul forfait de première installation en nutrition entérale (dans une vie)<br>"
+    "- Choisir le forfait le plus rémunérateur (pour celui d'installation et pour celui de suivi)<br>"
+    "- Pas plus de 4 perfusions/j d'un même dispositif<br>"
+    "- Possibilité de cumuler 4 perfusions d'un dispositif et 1 d'un autre<br>"
+    "- Forfait Installation 2 : applicable 4j après le forfait de 1ère installation"
+    "</p>",
+    unsafe_allow_html=True,
+)
+
 # Session state initialization
 if "details" not in st.session_state:
     st.session_state.details = []
 if "total" not in st.session_state:
     st.session_state.total = 0
-if "client_sap" not in st.session_state:
-    st.session_state.client_sap = ""
 
 # Indications Selection
 selected_indications = st.sidebar.multiselect("Choisissez les dispositifs du patient", options=indications)
@@ -113,4 +124,4 @@ if st.session_state.details:
     st.write(f"Total HT: {st.session_state.total:.2f}€")
     st.write("Fait par Romain Margalet avec ❤️")
     st.write("Tu n'es pas sûr de ton calcul, je peux t'aider : romain.margalet@bastide-medical.fr")
-
+    
