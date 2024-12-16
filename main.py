@@ -46,6 +46,17 @@ sheet_data = [
     {"Indication": "NUT ENT", "Designation": "Nutrition entérale, forfait de première installation.", "Tarif_HT": 146.53},
     {"Indication": "NUT ENT", "Designation": "Nutrition entérale, forfait hebdomadaire sans pompe ou par gravité", "Tarif_HT": 50.33},
     {"Indication": "NUT ENT", "Designation": "Nutrition entérale, forfait hebdomadaire avec pompe", "Tarif_HT": 68.52}
+    {"Indication": "NUT ENT", "Designation": "Nutrition entérale, vente 500ml normocal", "Tarif_HT": 3.11}
+    {"Indication": "NUT ENT", "Designation": "Nutrition entérale, vente 500ml hypercal", "Tarif_HT": 3.61}
+    {"Indication": "NUT ENT", "Designation": "Nutrition entérale, vente 500ml hyperprot, hypercal", "Tarif_HT": 3.65}
+    {"Indication": "NUT ENT", "Designation": "Nutrition entérale, vente 500ml 2kcal", "Tarif_HT": 4.20}
+    {"Indication": "NUT ENT", "Designation": "Nutrition entérale, Sonde de remplacement gastrostomie(4/an)", "Tarif_HT": 32.92}
+    {"Indication": "NUT ENT", "Designation": "Nutrition entérale, Sonde silicone (1/mois)", "Tarif_HT": 4.37}
+    {"Indication": "NUT ENT", "Designation": "Nutrition entérale, Sonde PVC (1/24h)", "Tarif_HT": 0.49}
+    {"Indication": "NUT ENT", "Designation": "Nutrition entérale, Set Gastro ASEPT", "Tarif_HT": 34.16}
+    {"Indication": "NUT ENT", "Designation": "Nutrition entérale, Bouton (4/an)", "Tarif_HT": 231.20}
+    {"Indication": "NUT ENT", "Designation": "Nutrition entérale, Prolongateur (bouton 1/sem)", "Tarif_HT": 10.83}
+    {"Indication": "NUT ENT", "Designation": "Nutrition entérale, Set SNG pédia", "Tarif_HT": 59.72}
 ]
 
 indications = list(set(item["Indication"] for item in sheet_data))
