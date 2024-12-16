@@ -77,7 +77,7 @@ st.sidebar.markdown(
     "- Choisir le forfait le plus rémunérateur (pour celui d'installation et pour celui de suivi)<br>"
     "- Pas plus de 4 perfusions/j d'un même dispositif<br>"
     "- Possibilité de cumuler 4 perfusions d'un dispositif et 1 d'un autre<br>"
-    "- Forfait Installation 2 : applicable 4j après le forfait de 1ère installation"
+    "- Forfait Installation 2 : applicable 4j après le forfait de 1ère installation, pour un autre dispositif"
     "</p>",
     unsafe_allow_html=True,
 )
