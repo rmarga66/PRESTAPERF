@@ -59,6 +59,26 @@ sheet_data = [
     {"Indication": "NUT ENT", "Designation": "Nutrition entérale, Set SNG pédia", "Tarif_HT": 59.72},
 ]
 
+import streamlit as st
+from PIL import Image
+
+# Hardcoded data from the simplified Excel file
+sheet_data = [
+    {"Indication": "SA", "Designation": "forf Perfusion à domicile, forf instal1, syst actif électrique, PERFADOM1-I1-SA-ELEC", "Tarif_HT": 297.67},
+    {"Indication": "SA", "Designation": "forf instal2, système actif élec, PERFADOM2-I2-SA-ELEC", "Tarif_HT": 137.38},
+    {"Indication": "SA", "Designation": "forf ins rempli par ES, syst actif élec, PERFADOM3-I-REMPLI-ES-SA-ELEC", "Tarif_HT": 137.38},
+    {"Indication": "DIFF", "Designation": "forf instal1, diffuseur, PERFADOM4-I1-DIFF", "Tarif_HT": 190.81},
+    {"Indication": "DIFF", "Designation": "forf instal2, diffuseur, PERFADOM5-I2-DIFF", "Tarif_HT": 87.77},
+    {"Indication": "GRAV", "Designation": "forfait instal et suivi, gravité, PERFADOM6-IS-GRAV", "Tarif_HT": 38.16},
+    {"Indication": "SA", "Designation": "forfait hebdo suivi, système actif, PERFADOM7E-S-SA-ELEC", "Tarif_HT": 83.95},
+    {"Indication": "DIFF", "Designation": "forfait hebdo suivi, diffuseur, PERFADOM8-S-DIFF", "Tarif_HT": 38.16},
+    {"Indication": "GRAV", "Designation": "forf/ perf consom-access, Gravité, < 15 perf, PERFADOM17-C-GRAV < 15/ 28J", "Tarif_HT": 9},
+    {"Indication": "GRAV", "Designation": "forf hebdo consom-access, Gravité, 1 perf/ j, PERFADOM18-C-GRAV = 1/ J", "Tarif_HT": 63.35},
+    {"Indication": "GRAV", "Designation": "forf hebdo consom-access, Gravité, 2 perf/ j, PERFADOM19-C-GRAV = 2/ J", "Tarif_HT": 119.83},
+    {"Indication": "GRAV", "Designation": "forf hebdo consom-access, Gravité, > 2 perf/ j, PERFADOM20-C-GRAV > 2/ J", "Tarif_HT": 170.2},
+    # Add remaining rows as needed...
+]
+
 indications = list(set(item["Indication"] for item in sheet_data))
 
 # Load logo
@@ -74,45 +94,43 @@ if "details" not in st.session_state:
     st.session_state.details = []
 if "total" not in st.session_state:
     st.session_state.total = 0
-if "client_sap" not in st.session_state:
-    st.session_state.client_sap = ""
 
 # Indications Selection
 selected_indications = st.sidebar.multiselect("Choisissez les dispositifs du patient", options=indications)
 
-# Filtered Designations
-designations = [item for item in sheet_data if item["Indication"] in selected_indications]
-designation_quantities = {}
-
 if selected_indications:
     st.subheader("PERFADOM")
-    for item in designations:
-        designation = item["Designation"]
-        quantity = st.number_input(f"Quantité pour {designation}", min_value=0, step=1, key=designation)
-        designation_quantities[designation] = (quantity, item["Tarif_HT"])
+
+    for indication in selected_indications:
+        # Filter forfaits d'installation et de suivi
+        forfaits_installation = [item for item in sheet_data if item["Indication"] == indication and "instal" in item["Designation"]]
+        forfaits_suivi = [item for item in sheet_data if item["Indication"] == indication and "suivi" in item["Designation"]]
+
+        # Sélection automatique des forfaits les plus chers
+        if forfaits_installation:
+            forfait_installation_max = max(forfaits_installation, key=lambda x: x["Tarif_HT"])
+            st.write(f"Choix automatique pour l'installation ({indication}): {forfait_installation_max['Designation']} à {forfait_installation_max['Tarif_HT']}€ HT")
+            st.number_input(f"Quantité pour {forfait_installation_max['Designation']}", min_value=0, step=1, key=forfait_installation_max["Designation"])
+
+        if forfaits_suivi:
+            forfait_suivi_max = max(forfaits_suivi, key=lambda x: x["Tarif_HT"])
+            st.write(f"Choix automatique pour le suivi ({indication}): {forfait_suivi_max['Designation']} à {forfait_suivi_max['Tarif_HT']}€ HT")
+            st.number_input(f"Quantité pour {forfait_suivi_max['Designation']}", min_value=0, step=1, key=forfait_suivi_max["Designation"])
+
+# Display consumables
+st.subheader("Consommables")
+for item in [item for item in sheet_data if "consom-access" in item["Designation"]]:
+    quantity = st.number_input(f"Quantité pour {item['Designation']}", min_value=0, step=1, key=item["Designation"])
+    if quantity > 0:
+        st.session_state.details.append(f"{item['Designation']}: {quantity} x {item['Tarif_HT']}€ HT = {quantity * item['Tarif_HT']:.2f}€ HT")
+        st.session_state.total += quantity * item["Tarif_HT"]
 
 if st.button("Calculer"):
-    st.session_state.details = []
-    st.session_state.total = 0
-
-    for designation, (quantity, tarif_ht) in designation_quantities.items():
-        if quantity > 0:
-            cost = tarif_ht * quantity
-            st.session_state.total += cost
-            st.session_state.details.append(f"{designation}: {quantity} x {tarif_ht}€ HT = {cost:.2f}€ HT")
-
     st.success("Calcul terminé, c'est de la bombe bébé !")
-
-# Display calculation details
-if st.session_state.details:
     st.subheader("Détail de ta facture")
     for detail in st.session_state.details:
         st.write(detail)
-
     st.subheader("Total")
     st.write(f"Total HT: {st.session_state.total:.2f}€")
     st.write("Fait par Romain Margalet avec ❤️")
     st.write("Tu n'es pas sûr de ton calcul, je peux t'aider : romain.margalet@bastide-medical.fr")
-
-
-
