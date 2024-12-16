@@ -74,44 +74,43 @@ if "details" not in st.session_state:
     st.session_state.details = []
 if "total" not in st.session_state:
     st.session_state.total = 0
-if "client_sap" not in st.session_state:
-    st.session_state.client_sap = ""
 
 # Indications Selection
 selected_indications = st.sidebar.multiselect("Choisissez les dispositifs du patient", options=indications)
 
-# Filtered Designations
-designations = [item for item in sheet_data if item["Indication"] in selected_indications]
-designation_quantities = {}
-
 if selected_indications:
-    st.subheader("PERFADOM")
-    for item in designations:
-        designation = item["Designation"]
-        quantity = st.number_input(f"Quantité pour {designation}", min_value=0, step=1, key=designation)
-        designation_quantities[designation] = (quantity, item["Tarif_HT"])
+    st.subheader("Forfaits d'installation et de suivi")
+
+    for indication in selected_indications:
+        # Filter forfaits d'installation et de suivi
+        forfaits_installation = [item for item in sheet_data if item["Indication"] == indication and "instal" in item["Designation"]]
+        forfaits_suivi = [item for item in sheet_data if item["Indication"] == indication and "suivi" in item["Designation"]]
+
+        # Sélection automatique des forfaits les plus chers
+        if forfaits_installation:
+            forfait_installation_max = max(forfaits_installation, key=lambda x: x["Tarif_HT"])
+            st.write(f"Choix automatique pour l'installation ({indication}): {forfait_installation_max['Designation']} à {forfait_installation_max['Tarif_HT']}€ HT")
+            st.number_input(f"Quantité pour {forfait_installation_max['Designation']}", min_value=0, step=1, key=forfait_installation_max["Designation"])
+
+        if forfaits_suivi:
+            forfait_suivi_max = max(forfaits_suivi, key=lambda x: x["Tarif_HT"])
+            st.write(f"Choix automatique pour le suivi ({indication}): {forfait_suivi_max['Designation']} à {forfait_suivi_max['Tarif_HT']}€ HT")
+            st.number_input(f"Quantité pour {forfait_suivi_max['Designation']}", min_value=0, step=1, key=forfait_suivi_max["Designation"])
+
+    st.subheader("Autres désignations")
+    other_designations = [item for item in sheet_data if item["Indication"] in selected_indications and "instal" not in item["Designation"] and "suivi" not in item["Designation"]]
+    for item in other_designations:
+        quantity = st.number_input(f"Quantité pour {item['Designation']}", min_value=0, step=1, key=item["Designation"])
+        if quantity > 0:
+            st.session_state.details.append(f"{item['Designation']}: {quantity} x {item['Tarif_HT']}€ HT = {quantity * item['Tarif_HT']:.2f}€ HT")
+            st.session_state.total += quantity * item["Tarif_HT"]
 
 if st.button("Calculer"):
-    st.session_state.details = []
-    st.session_state.total = 0
-
-    for designation, (quantity, tarif_ht) in designation_quantities.items():
-        if quantity > 0:
-            cost = tarif_ht * quantity
-            st.session_state.total += cost
-            st.session_state.details.append(f"{designation}: {quantity} x {tarif_ht}€ HT = {cost:.2f}€ HT")
-
     st.success("Calcul terminé, c'est de la bombe bébé !")
-
-# Display calculation details
-if st.session_state.details:
     st.subheader("Détail de ta facture")
     for detail in st.session_state.details:
         st.write(detail)
-
     st.subheader("Total")
     st.write(f"Total HT: {st.session_state.total:.2f}€")
     st.write("Fait par Romain Margalet avec ❤️")
     st.write("Tu n'es pas sûr de ton calcul, je peux t'aider : romain.margalet@bastide-medical.fr")
-
-
