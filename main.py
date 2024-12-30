@@ -66,7 +66,7 @@ logo = Image.open("logo.png")  # Replace "logo.png" with the path to your logo f
 
 # Streamlit UI
 st.image(logo, width=150)
-st.title("Calculette PRESTAPERF")
+st.title("Calculette - PRESTAPERF")
 st.sidebar.header("Bonjour,")
 
 # Sidebar instructions
