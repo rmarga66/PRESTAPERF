@@ -66,13 +66,13 @@ logo = Image.open("logo.png")  # Replace "logo.png" with the path to your logo f
 
 # Streamlit UI
 st.image(logo, width=150)
-st.title("Calculette - PRESTAPERF")
+st.title("💉Calculette - PRESTAPERF💉")
 st.sidebar.header("Bonjour,")
 
 # Sidebar instructions
 st.sidebar.markdown(
     "<p style='color:red; font-style:italic;'>"
-    "AIDE MEMOIRE :<br>"
+    "🗒️AIDE MEMOIRE :⬇️<br>"
     "- Un seul forfait de première installation en nutrition entérale (dans une vie)<br>"
     "- Choisir le forfait le plus rémunérateur (pour celui d'installation et pour celui de suivi)<br>"
     "- Pas plus de 4 perfusions/j d'un même dispositif (SA/Diff)<br>"
@@ -89,7 +89,7 @@ if "total" not in st.session_state:
     st.session_state.total = 0
 
 # Indications Selection
-selected_indications = st.sidebar.multiselect("Choisissez les dispositifs du patient", options=indications)
+selected_indications = st.sidebar.multiselect("📌 Choisissez les dispositifs du patient", options=indications)
 
 # Filtered Designations
 designations = [item for item in sheet_data if item["Indication"] in selected_indications]
@@ -112,8 +112,7 @@ if st.button("Calculer"):
             st.session_state.total += cost
             st.session_state.details.append(f"{designation}: {quantity} x {tarif_ht}€ HT = {cost:.2f}€ HT")
 
-    st.success("Calcul terminé, c'est de la bombe bébé !")
-
+    st.success("🍾 Calcul terminé, c'est de la bombe bébé ! 🍾")
 # Display calculation details
 if st.session_state.details:
     st.subheader("Détail de ta facture")
@@ -122,6 +121,6 @@ if st.session_state.details:
 
     st.subheader("Total")
     st.write(f"Total HT: {st.session_state.total:.2f}€")
-    st.write("Fait par Romain Margalet")
-    st.write("Tu n'es pas sûr de ton calcul, je peux t'aider : romain.margalet@bastide-medical.fr")
+    st.write("Fait par Romain Margalet 🧔🏻‍♂️")
+    st.write("Tu n'es pas sûr de ton calcul, je peux t'aider : 📧 romain.margalet@bastide-medical.fr")
     
