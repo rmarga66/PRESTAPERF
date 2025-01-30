@@ -75,7 +75,7 @@ st.sidebar.markdown(
     "AIDE MEMOIRE :<br>"
     "- Un seul forfait de première installation en nutrition entérale (dans une vie)<br>"
     "- Choisir le forfait le plus rémunérateur (pour celui d'installation et pour celui de suivi)<br>"
-    "- Pas plus de 4 perfusions/j d'un même dispositif(SA/Diff)<br>"
+    "- Pas plus de 4 perfusions/j d'un même dispositif (SA/Diff)<br>"
     "- Possibilité de cumuler 4 perfusions d'un dispositif (SA et Diff) et 1 d'un autre(Gravité)<br>"
     "- Forfait Installation 2 : applicable 4j après le forfait de 1ère installation, pour un autre dispositif"
     "</p>",
