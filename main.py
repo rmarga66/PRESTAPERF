@@ -66,7 +66,7 @@ logo = Image.open("logo.png")  # Replace "logo.png" with the path to your logo f
 
 # Streamlit UI
 st.image(logo, width=150)
-st.title("💉Calculette - PRESTAPERF💉")
+st.title("🩺 Calculette - PRESTAPERF 💉")
 st.sidebar.header("Bonjour,")
 
 # Sidebar instructions
@@ -102,7 +102,7 @@ if selected_indications:
         quantity = st.number_input(f"Quantité pour {designation}", min_value=0, step=1, key=designation)
         designation_quantities[designation] = (quantity, item["Tarif_HT"])
 
-if st.button("Calculer"):
+if st.button("Calculer 🎰"):
     st.session_state.details = []
     st.session_state.total = 0
 
