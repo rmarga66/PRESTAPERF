@@ -64,6 +64,9 @@ indications = list(set(item["Indication"] for item in sheet_data))
 # Load logo
 logo = Image.open("logo.png")  # Replace "logo.png" with the path to your logo file
 
+# Interface principale de l'application
+t.set_page_config(page_title="PrestaPerf", page_icon="🧮", layout="centered")
+
 # Streamlit UI
 st.image(logo, width=150)
 st.title("🩺 Calculette - PRESTAPERF 💉")
